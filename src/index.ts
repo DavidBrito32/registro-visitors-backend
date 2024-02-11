@@ -25,10 +25,6 @@ App.get("/ping", (req: Request, res: Response) => {
 
 
 
-
-
-
-
 App.listen(port, () => {
 	console.log(`servidor rodadando no endereço: http://localhost:${port}/`);
 });
