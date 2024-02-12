@@ -1,5 +1,5 @@
 export class Visitor {
-	protected id: number;
+	protected id: string;
 	protected name: string;
 	protected cpf: string;
 	protected gender: string;
@@ -10,15 +10,15 @@ export class Visitor {
 	protected createdAt: string;
 
 	constructor(
-		id: number,
+		id: string,
 		name: string,
 		cpf: string,
 		gender: string,
 		age: number,
 		city: string,
 		state: string,
-		createdAt: string,
-		profession: string
+		profession: string,
+		createdAt: string
 	) {
 		this.id = id;
 		this.name = name;
@@ -31,11 +31,11 @@ export class Visitor {
 		this.profession = profession;
 	}
 
-	public getId(): number {
+	public getId(): string {
 		return this.id;
 	}
 
-	public setId(id: number): void {
+	public setId(id: string): void {
 		this.id = id;
 	}
 

@@ -1,5 +1,6 @@
 import express, { Request, Response, Express } from "express";
 import cors from "cors";
+import { VisitorRouter } from "./routes/Visitor";
 
 const App: Express = express();
 const port = 3008;
@@ -22,6 +23,8 @@ App.get("/ping", (req: Request, res: Response) => {
 		}
 	}
 });
+
+App.use("/visitor", VisitorRouter);
 
 
 

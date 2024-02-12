@@ -1,5 +1,5 @@
 export class User {
-	protected id: number;
+	protected id: string;
 	protected name: string;
 	protected role: string;
 	protected cpf: string;
@@ -7,7 +7,7 @@ export class User {
 	protected password: string;
 	protected createdAt: string;
 	constructor(
-		id: number,
+		id: string,
 		name: string,
 		role: string,
 		cpf: string,
@@ -24,11 +24,11 @@ export class User {
 		this.createdAt = createdAt;
 	}
 
-	public getId (): number {
+	public getId (): string {
 		return this.id;
 	}
 
-	public setId (id: number):void {
+	public setId (id: string):void {
 		this.id = id;
 	}
 

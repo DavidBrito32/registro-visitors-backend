@@ -1,13 +1,13 @@
 export interface Visitors {
-    id: number;
+    id: string;
     name: string;
     cpf: string;
     gender: string;
     age: number;
-    state: string;
-    city: string;
-    createdAt: string;
     profession: string;
+    city: string;
+    state: string;
+    created_at: string;
 }
 
 
@@ -18,5 +18,5 @@ export interface Users {
   email: string;
   role: string;
   password: string;
-  createdAt: string;
+  created_at: string;
 }
