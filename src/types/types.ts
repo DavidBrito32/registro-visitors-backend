@@ -10,7 +10,6 @@ export interface Visitors {
     created_at: string;
 }
 
-
 export interface Users {
   id: number;
   name: string;

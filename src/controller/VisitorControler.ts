@@ -33,9 +33,6 @@ export class VisitorControler {
 
 				visitas = visit;
 			}
-
-            
-
 			res.status(200).send(visitas);
 		} catch (err) {
 			if (res.statusCode === 200) {
