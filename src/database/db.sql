@@ -33,9 +33,16 @@ VALUES
 SELECT * FROM visitor;
 
 
+
 CREATE TABLE IF NOT EXISTS registro(
-    id TEXT NOT NULL PRIMARY KEY,
     id_visitor TEXT NOT NULL,
     date_visit TEXT NOT NULL,
     FOREIGN KEY(id_visitor) REFERENCES visitor(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+
+
+SELECT * FROM registro;
+
+SELECT * FROM registro
+INNER JOIN visitor ON visitor.id = registro.id_visitor;

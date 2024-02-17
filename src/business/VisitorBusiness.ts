@@ -6,7 +6,9 @@ import { IdGenerator } from "../services/uuid/IdGenerator";
 import { Visitors } from "../types/types";
 
 export class VisitorBusiness {
-	public getAllVisitors = async (name: string): Promise<Array<Visitors> | undefined> => {
+	public getAllVisitors = async (
+		name: string
+	): Promise<Array<Visitors> | undefined> => {
 		const DB = new VisitorDb();
 		let visitantes: Visitors[] | undefined;
 		if (name) {
@@ -30,6 +32,31 @@ export class VisitorBusiness {
 				)
 		);
 		return visit;
+	};
+
+	public getVisitorByCpF = async (
+		CPF: string
+	): Promise<Array<Visitors> | undefined> => {
+		if (typeof CPF !== "string") {
+			throw new Error("'CPF' - Deve ser Informado no formato de TEXTO");
+		}
+
+		const DATABASE = new VisitorDb();
+
+		const VISITOR: Array<Visitors> | undefined = await DATABASE.getVisitorByCpF(CPF);
+		//@ts-ignore
+		if(VISITOR?.length < 1){
+			throw new Error("'CPF' - Não Encontrado, Favor Realizar Cadastro");
+		}
+
+		// @ts-ignore
+		return VISITOR;
+	};
+
+	public checkVisit = async (id: string): Promise<void> => {
+		const Visit = new VisitorDb();
+		const Data = new Date().toString();
+		await Visit.checkVisit(id, Data);
 	};
 
 	public createVisitors = async (object: Visitors): Promise<void> => {
@@ -77,9 +104,7 @@ export class VisitorBusiness {
 			throw new Error("'cpf' - deve ser enviado no formato string");
 		}
 		if (cpf.length < 15 && cpf.length > 15) {
-			throw new Error(
-				"'cpf' - deve conter 15 caracteres ex: '000.000.000-00'"
-			);
+			throw new Error("'cpf' - deve conter 15 caracteres ex: '000.000.000-00'");
 		}
 		if (typeof gender !== "string") {
 			throw new Error("'gender' - deve ser enviado no formato string");
@@ -98,9 +123,6 @@ export class VisitorBusiness {
 		const CriarUsuario = new IdGenerator();
 
 		const id = CriarUsuario.generate();
-		// const salt = await bcrypt.genSalt(12);
-		// const protectedCpf = await bcrypt.hash(cpf, salt);
-
 		const visitante = new Visitor(
 			id,
 			name,
@@ -112,16 +134,18 @@ export class VisitorBusiness {
 			profession,
 			new Date().toISOString()
 		);
+		const VerificaCPF = new VisitorDb();
 
-		const VerificaCPF = new VisitorDb;
-        
-		const existe = await VerificaCPF.getVisitorByCpF(cpf);
-		if(existe !== undefined){
-			throw new Error("'CPF' - Ja cadastrado - Marque apenas a presença");
+		const existe: Array<Visitors> | undefined = await VerificaCPF.getVisitorByCpF(cpf);
+		//@ts-ignore
+		if (existe && existe[0] !== undefined) {
+			throw new Error(
+				"CPF Ja cadastrado, Registre sua presença na pagina de Visitante Cadastrado"
+			);
 		}
 
 		const visitanteDB = new VisitorDb();
-        
+
 		await visitanteDB.createVisitor(
 			visitante.getId(),
 			visitante.getName(),
@@ -136,13 +160,15 @@ export class VisitorBusiness {
 
 	public editVisitor = async (id: string, object: Visitors): Promise<void> => {
 		const visitante = new VisitorDb();
-		const visitorToEdit: Visitors | undefined =
-        await visitante.getVisitorById(id);
+		const visitorToEdit: Visitors | undefined = await visitante.getVisitorById(
+			id
+		);
 		if (!visitorToEdit) {
 			throw new Error("'id' - usuario não encontrado");
 		}
 
 		const { name, cpf, gender, age, profession, city, state } = object;
+
 		if (name) {
 			if (typeof name !== "string") {
 				throw new Error("'name' - Deve ser enviado no formato string");
@@ -180,7 +206,6 @@ export class VisitorBusiness {
 				throw new Error("'state' - Deve ser enviado no formato string");
 			}
 		}
-
 		await visitante.editVisitor(
 			id,
 			name || visitorToEdit.name,
@@ -192,13 +217,11 @@ export class VisitorBusiness {
 			state || visitorToEdit.state
 		);
 	};
-    
+
 	public deleteVisitor = async (id: string): Promise<void> => {
 		const visitor = new VisitorDb();
 
-		const existe: Visitors | undefined = await visitor.getVisitorById(
-			id
-		);
+		const existe: Visitors | undefined = await visitor.getVisitorById(id);
 
 		if (!existe) {
 			throw new Error("'id' - usuario não encontrado");

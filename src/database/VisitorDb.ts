@@ -29,18 +29,21 @@ export class VisitorDb extends Database {
 		return visitorSearch[0];
 	}
 
-	public async getVisitorByCpF(cpf: string): Promise<Visitors | undefined> {
+	public async getVisitorByCpF(cpf: string): Promise<Array<Visitors> | undefined> {
 		const visitorSearch: Array<Visitors> = await Database.connection
 			.select("*")
 			.from("visitor")
 			.where({ cpf: cpf });
 
-		if (visitorSearch.length < 1) {
-			return undefined;
-		}
-
-		return visitorSearch[0];
+		return visitorSearch;
 	}
+
+	public checkVisit = async (id: string, date: string): Promise<void> => {
+		await Database.connection.insert({
+			id_visitor: id,
+			date_visit: date,
+		}).into("registro");
+	};
 
 	public async createVisitor(
 		id: string,
@@ -65,6 +68,11 @@ export class VisitorDb extends Database {
 				created_at: new Date().toISOString(),
 			})
 			.into("visitor");
+
+		await Database.connection.insert({
+			id_visitor: id,
+			date_visit: new Date().toISOString(),
+		}).into("registro");
 	}
 
 	public async editVisitor(

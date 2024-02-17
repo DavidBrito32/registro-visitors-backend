@@ -9,6 +9,8 @@ VisitorRouter.get("/", visitante.getAllVisitor);
 
 VisitorRouter.post("/", visitante.createVisitor);
 
+VisitorRouter.post("/registred", visitante.getVisitorByCpF);
+
 VisitorRouter.put("/:id", visitante.editVisitor);
 
 VisitorRouter.delete("/:id", visitante.deleteVisitor);
