@@ -16,11 +16,26 @@ VALUES
 ('v001', 'Francisco Davi Carneiro Brito', '061.718.213-22', 'Masculino', 27, 'Programador', 'Fortaleza', 'CE');
 
 CREATE TABLE IF NOT EXISTS user(
-    id INTEGER NOT NULL UNIQUE PRIMARY KEY,
+    id TEXT NOT NULL UNIQUE PRIMARY KEY,
     name TEXT NOT NULL,
     role TEXT NOT NULL,
     cpf TEXT NOT NULL UNIQUE,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+INSERT INTO user(id, name, role, cpf, email, password, created_at)
+VALUES
+('u001', 'David Brito', 'ADMINISTRADOR', '061.718.213-22', 'davidbrito.carneiro458@gmail.com', 'Davi1234', CURRENT_TIMESTAMP);
+
+SELECT * FROM visitor;
+
+
+CREATE TABLE IF NOT EXISTS registro(
+    id TEXT NOT NULL PRIMARY KEY,
+    id_visitor TEXT NOT NULL,
+    date_visit TEXT NOT NULL,
+    FOREIGN KEY(id_visitor) REFERENCES visitor(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
