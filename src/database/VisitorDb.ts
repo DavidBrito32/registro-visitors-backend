@@ -69,10 +69,7 @@ export class VisitorDb extends Database {
 			})
 			.into("visitor");
 
-		await Database.connection.insert({
-			id_visitor: id,
-			date_visit: new Date().toISOString(),
-		}).into("registro");
+		await this.checkVisit(id, new Date().toISOString());
 	}
 
 	public async editVisitor(

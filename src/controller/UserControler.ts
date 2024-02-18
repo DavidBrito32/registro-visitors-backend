@@ -1,15 +1,11 @@
 import { Request, Response } from "express";
-import { UserDb } from "../database/UserDb";
-import { Users } from "../types/types";
-import { User } from "../models/User";
+import { UserBusiness } from "../business/UserBusiness";
 
 export class UserControler {
-
 	public async getAllUsers(req: Request, res: Response){
 		try{
-			const user = new UserDb();
-			const userList: Array<Users> = await user.getUsers();
-			const userReturn = userList.map((item: Users) => new User(item.id, item.name, item.role, item.cpf, item.email, item.password, item.created_at));
+			const user = new UserBusiness();
+			const userReturn = await user.getAllUsers();
 			res.status(200).send(userReturn);
 		}catch (err){
 			if(res.statusCode === 200){
@@ -23,9 +19,10 @@ export class UserControler {
 			}
 		}
 	}
-
 	public async createUser(req: Request, res: Response){
 		try{
+			const usuario = new UserBusiness();
+			await usuario.createUser(req.body);
 			res.status(200).send("Usuario Criado com sucesso! 🎆");
 		}catch (err){
 			if(res.statusCode === 200){
@@ -39,10 +36,14 @@ export class UserControler {
 			}
 		}
 	}
-
 	public async editUser(req: Request, res: Response){
 		try{
-			res.status(200).send("Usuario Criado com sucesso! 🎆");
+			const ID = req.params.id;
+			const Data = req.body;
+			const editar = new UserBusiness();
+
+			await editar.editUser(ID, Data);
+			res.status(200).send("Usuario Editado com sucesso! 🎆");
 		}catch (err){
 			if(res.statusCode === 200){
 				res.statusCode = 400;
@@ -55,10 +56,12 @@ export class UserControler {
 			}
 		}
 	}
-
 	public async deleteUser(req: Request, res: Response){
 		try{
-			res.status(200).send("Usuario Criado com sucesso! 🎆");
+			const ID = req.params.id;
+			const DEL = new UserBusiness();
+			await DEL.deleteUser(ID);
+			res.status(200).send("Usuario Deletado com sucesso! 🎆");
 		}catch (err){
 			if(res.statusCode === 200){
 				res.statusCode = 400;

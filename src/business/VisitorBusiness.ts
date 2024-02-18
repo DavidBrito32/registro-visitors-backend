@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { VisitorDb } from "../database/VisitorDb";
 import { Visitor } from "../models/Visitor";
@@ -6,50 +5,40 @@ import { IdGenerator } from "../services/uuid/IdGenerator";
 import { Visitors } from "../types/types";
 
 export class VisitorBusiness {
-	public getAllVisitors = async (
-		name: string
-	): Promise<Array<Visitors> | undefined> => {
+	public getAllVisitors = async (name: string): Promise<Array<Visitors>> => {
 		const DB = new VisitorDb();
-		let visitantes: Visitors[] | undefined;
+		let visitantes: Visitors[];
 		if (name) {
 			visitantes = await DB.getByQueryParams(name);
+			return visitantes;
 		} else {
 			visitantes = await DB.getAllVisitors();
+			//@ts-expect-error
+			const visit: Array<Visitors> = visitantes.map((item: Visitors) => new Visitor(
+				item.id,
+				item.name,
+				item.cpf,
+				item.gender,
+				item.age,
+				item.city,
+				item.state,
+				item.profession,
+				item.created_at
+			)
+			);
+			return visit;
 		}
-		// @ts-ignore
-		const visit: Array<Visitors> = visitantes.map(
-			(item: Visitors) =>
-				new Visitor(
-					item.id,
-					item.name,
-					item.cpf,
-					item.gender,
-					item.age,
-					item.city,
-					item.state,
-					item.profession,
-					item.created_at
-				)
-		);
-		return visit;
 	};
 
-	public getVisitorByCpF = async (
-		CPF: string
-	): Promise<Array<Visitors> | undefined> => {
+	public getVisitorByCpF = async (CPF: string): Promise<Array<Visitors> | undefined> => {
 		if (typeof CPF !== "string") {
 			throw new Error("'CPF' - Deve ser Informado no formato de TEXTO");
 		}
-
 		const DATABASE = new VisitorDb();
-
 		const VISITOR: Array<Visitors> | undefined = await DATABASE.getVisitorByCpF(CPF);
-		//@ts-ignore
-		if(VISITOR?.length < 1){
+		if(VISITOR && VISITOR.length < 1){
 			throw new Error("'CPF' - Não Encontrado, Favor Realizar Cadastro");
 		}
-
-		// @ts-ignore
 		return VISITOR;
 	};
 
@@ -137,7 +126,6 @@ export class VisitorBusiness {
 		const VerificaCPF = new VisitorDb();
 
 		const existe: Array<Visitors> | undefined = await VerificaCPF.getVisitorByCpF(cpf);
-		//@ts-ignore
 		if (existe && existe[0] !== undefined) {
 			throw new Error(
 				"CPF Ja cadastrado, Registre sua presença na pagina de Visitante Cadastrado"
