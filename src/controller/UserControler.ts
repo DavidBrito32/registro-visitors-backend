@@ -74,4 +74,7 @@ export class UserControler {
 			}
 		}
 	}
+	public async login(req: Request, res: Response){
+		
+	}
 }

@@ -1,17 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Users } from "../types/types";
 import { Database } from "./knex";
 
 export class UserDb extends Database {
 	public async getUsers(): Promise<Array<Users>> {
-		const users: Users[] = await Database.connection("user");
+		const users: Array<Users> = await Database.connection("user");
 		return users;
 	}
 
-	public async getUsersById(id: string): Promise<Users> {
-		//@ts-ignore
-		const [user]: Array<Users> = await Database.connection.select("*").from("user").where({id: id});
+	public async getUsersById(id: string): Promise<Users | undefined> {
+		const [user]: Array<Users> | undefined[] = await Database.connection.select("*").from("user").where({id: id});
 		return user;
 	}
 
@@ -27,12 +24,12 @@ export class UserDb extends Database {
 		}).into("user");
 	}
 
-	public async getByCpf(cpf: string): Promise<Array<Users>>{
-		const usuario = await Database.connection("user").where({cpf: cpf});
+	public async getByCpf(cpf: string): Promise<Users | undefined>{
+		const [usuario]: Array<Users> | Array<undefined> = await Database.connection("user").where({cpf: cpf});
 		return usuario;
 	}
 
-	public async editUser (id: string, data: any): Promise<void> {
+	public async editUser (id: string, data: Users): Promise<void> {
 		const { name, role, cpf, email, password } = data;
 		await Database.connection.update({
 			name,
@@ -47,4 +44,9 @@ export class UserDb extends Database {
 	public async deleteUser(id: string): Promise<void>{
 		await Database.connection.delete().from("user").where({id: id});
 	}
-}
+
+	public async login(email: string, password: string): Promise<Users | undefined>{
+		const [ Usuario ] : Array<Users> | Array<undefined> = await Database.connection.select("email, password").from("user").where({email: email, password: password});
+		return Usuario;
+	}
+} 

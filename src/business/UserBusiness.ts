@@ -1,20 +1,19 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { UserDb } from "../database/UserDb";
 import { User } from "../models/User";
 import { IdGenerator } from "../services/uuid/IdGenerator";
 import { Users } from "../types/types";
 
 export class UserBusiness {
-	public async getAllUsers(): Promise<Array<Users>>{
+
+	public async getAllUsers(): Promise<Array<User>>{
 		const user = new UserDb();
 		const userList: Array<Users> = await user.getUsers();
-		const userReturn = userList.map((item: Users) => new User(item.id, item.name, item.role, item.cpf, item.email, item.password, item.created_at));
-		//@ts-ignore
+		const userReturn = userList.map((item) => new User(item.id, item.name, item.role, item.cpf, item.email, item.password, item.created_at));
 		return userReturn;
 	}
 
-	public async createUser(data: Users): Promise<void>{
-		const { name, cpf, role, email, password } = data;
+	public async createUser(input: Users): Promise<void>{
+		const { name, cpf, role, email, password } = input;
 		if(!name){
 			throw new Error("'name' - Não pode ser omitido");
 		}
@@ -51,8 +50,9 @@ export class UserBusiness {
 		const newUser = new User(ID, name, role, cpf, email, password, new Date().toISOString());
 
 		const Database = new UserDb();
-		const existe = await Database.getByCpf(cpf);
-		if(existe[0]){
+		const existe :Users | undefined = await Database.getByCpf(cpf);
+
+		if(existe){
 			throw new Error("'CPF' - ja cadastrado");
 		}
 		await Database.createUser(newUser.getId(), newUser.getName(), newUser.getRole(), newUser.getCpf(), newUser.getEmail(), newUser.getPassword(), newUser.getCreatedAt());
@@ -89,21 +89,12 @@ export class UserBusiness {
 			throw new Error("'id' - deve ser uma string");
 		}
 		const DataBase = new UserDb();
-		const UsuarioEditado: Users = await DataBase.getUsersById(id);
+		const UsuarioEditado: Users | undefined = await DataBase.getUsersById(id);
 		if(!UsuarioEditado){
 			throw new Error("'Usuario' -  não encontrado");
 		}
-		const usuarioEditadoAtualizado = new User(
-			UsuarioEditado.id,
-			name || UsuarioEditado.name,
-			role || UsuarioEditado.role,
-			cpf || UsuarioEditado.cpf,
-			email || UsuarioEditado.email,
-			password || UsuarioEditado.password,
-			new Date().toISOString()
-		);
 
-		await DataBase.editUser(id, usuarioEditadoAtualizado);
+		await DataBase.editUser(id, UsuarioEditado);
 	}
 
 	public async deleteUser(id: string): Promise<void>{
@@ -111,10 +102,22 @@ export class UserBusiness {
 			throw new Error("'id' - deve ser enviado no formato string");
 		}
 		const DataBase = new UserDb();		
-		const userDel: Users = await DataBase.getUsersById(id);
+		const userDel: Users | undefined = await DataBase.getUsersById(id);
 		if(!userDel){
 			throw new Error("'Usuario' - não encontrado");
 		}
 		await DataBase.deleteUser(userDel.id);
+	}
+	
+	public async login(input: Users): Promise<Users>{
+		const { email, password } = input;
+		const userDB = new UserDb();
+		const output: Users | undefined = await userDB.login(email, password);
+
+		if(!output){
+			throw new Error("'email' - ou 'senha' incorretos");
+		}
+
+		return output;
 	}
 }
