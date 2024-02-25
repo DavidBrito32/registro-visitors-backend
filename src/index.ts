@@ -1,10 +1,13 @@
 import express, { Request, Response, Express } from "express";
+import env from "dotenv";
 import cors from "cors";
 import { VisitorRouter } from "./routes/Visitor";
 import { UserRouter } from "./routes/User";
 
 const App: Express = express();
 const port = 3008;
+env.config();
+
 
 App.use(express.json());
 App.use(cors());

@@ -1,4 +1,4 @@
-export interface Visitors {
+export interface VisitorDB {
   id: string;
   name: string;
   cpf: string;
@@ -10,7 +10,7 @@ export interface Visitors {
   created_at: string;
 }
 
-export interface Users {
+export interface UserDB {
   id: string;
   name: string;
   cpf: string;
@@ -20,8 +20,15 @@ export interface Users {
   created_at: string;
 }
 
-export interface Register {
+export interface BlockedVisitor {
   id: string;
-  id_user: string;
-  date_visit: string; 
+  name: string;
+  cpf: string;
+  message: string;
+}
+
+export interface LoginDB {
+  message: string;
+  usuario: UserDB;
+  token: string;
 }

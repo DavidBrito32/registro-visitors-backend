@@ -1,48 +1,95 @@
 -- Active: 1707650230331@@127.0.0.1@3306
-CREATE TABLE IF NOT EXISTS visitor(
-    id TEXT NOT NULL UNIQUE PRIMARY KEY,
-    name TEXT NOT NULL,
-    cpf TEXT NOT NULL UNIQUE,
-    gender TEXT NOT NULL,
-    age TEXT NOT NULL,
-    profession TEXT NOT NULL,
-    city TEXT NOT NULL,
-    state TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+CREATE TABLE
+    IF NOT EXISTS visitor (
+        id TEXT NOT NULL UNIQUE PRIMARY KEY,
+        name TEXT NOT NULL,
+        cpf TEXT NOT NULL UNIQUE,
+        gender TEXT NOT NULL,
+        age TEXT NOT NULL,
+        profession TEXT NOT NULL,
+        city TEXT NOT NULL,
+        state TEXT NOT NULL,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
 
-INSERT INTO visitor(id, name, cpf, gender, age, profession, city, state)
+INSERT INTO
+    visitor (
+        id,
+        name,
+        cpf,
+        gender,
+        age,
+        profession,
+        city,
+        state
+    )
 VALUES
-('v001', 'Francisco Davi Carneiro Brito', '061.718.213-22', 'Masculino', 27, 'Programador', 'Fortaleza', 'CE');
+    (
+        'v001',
+        'Francisco Davi Carneiro Brito',
+        '061.718.213-22',
+        'Masculino',
+        27,
+        'Programador',
+        'Fortaleza',
+        'CE'
+    );
 
-CREATE TABLE IF NOT EXISTS user(
-    id TEXT NOT NULL UNIQUE PRIMARY KEY,
-    name TEXT NOT NULL,
-    role TEXT NOT NULL,
-    cpf TEXT NOT NULL UNIQUE,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+CREATE TABLE
+    IF NOT EXISTS user (
+        id TEXT NOT NULL UNIQUE PRIMARY KEY,
+        name TEXT NOT NULL,
+        role TEXT NOT NULL,
+        cpf TEXT NOT NULL UNIQUE,
+        email TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
 
-
-INSERT INTO user(id, name, role, cpf, email, password, created_at)
+INSERT INTO
+    user (id, name, role, cpf, email, password, created_at)
 VALUES
-('u001', 'David Brito', 'ADMINISTRADOR', '061.718.213-22', 'davidbrito.carneiro458@gmail.com', 'Davi1234', CURRENT_TIMESTAMP);
+    (
+        'u001',
+        'David Brito',
+        'ADMINISTRADOR',
+        '061.718.213-22',
+        'davidbrito.carneiro458@gmail.com',
+        'Davi1234',
+        CURRENT_TIMESTAMP
+    );
 
-SELECT * FROM visitor;
+SELECT
+    *
+FROM
+    visitor;
 
+CREATE TABLE
+    IF NOT EXISTS registro (
+        id_visitor TEXT NOT NULL,
+        date_visit TEXT NOT NULL,
+        FOREIGN KEY (id_visitor) REFERENCES visitor (id) ON UPDATE CASCADE ON DELETE CASCADE
+    );
 
+SELECT
+    *
+FROM
+    registro;
 
-CREATE TABLE IF NOT EXISTS registro(
+SELECT
+    *
+FROM
+    registro
+    INNER JOIN visitor ON visitor.id = registro.id_visitor;
+
+CREATE TABLE IF NOT EXISTS visitors_block(
+    id TEXT NOT NULL PRIMARY KEY,
     id_visitor TEXT NOT NULL,
-    date_visit TEXT NOT NULL,
+    message TEXT NOT NULL,
     FOREIGN KEY(id_visitor) REFERENCES visitor(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
+SELECT * FROM visitors_block;
 
-SELECT * FROM registro;
 
-SELECT * FROM registro
-INNER JOIN visitor ON visitor.id = registro.id_visitor;

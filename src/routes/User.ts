@@ -12,3 +12,5 @@ UserRouter.post("/auth", user.createUser);
 UserRouter.put("/auth/:id", user.editUser);
 
 UserRouter.delete("/auth/:id", user.deleteUser);
+
+UserRouter.post("/auth/login", user.login);
