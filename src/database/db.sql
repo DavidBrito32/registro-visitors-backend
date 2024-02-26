@@ -62,7 +62,10 @@ VALUES
 SELECT
     *
 FROM
-    visitor;
+    user;
+
+    UPDATE FROM "user"
+    SET password = "davi1234"
 
 CREATE TABLE
     IF NOT EXISTS registro (

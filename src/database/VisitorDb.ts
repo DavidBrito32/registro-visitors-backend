@@ -105,14 +105,8 @@ export class VisitorDb extends Database {
 		await Database.connection("visitor").delete().where({ id: id });
 	}
 
-	public async blockVisitor(
-		id_table: string,
-		id_visitante: string,
-		message: string
-	): Promise<void> {
-		await Database.connection
-			.insert({ id: id_table, id_visitor: id_visitante, message: message })
-			.into("visitors_block");
+	public async blockVisitor(id_table: string, id_visitante: string, message: string): Promise<void> {
+		await Database.connection.insert({ id: id_table, id_visitor: id_visitante, message: message }).into("visitors_block");
 	}
 
 	public async unlockVisitor(id: string): Promise<void> {

@@ -28,7 +28,6 @@ export class UserBusiness {
 
 	public async createUser(input: UserDB): Promise<void> {
 		const { name, cpf, role, email, password }: UserDB = input;
-		console.log(input);
 		if (!name) {
 			throw new ValidationError("'name' - Não pode ser omitido");
 		}
@@ -166,6 +165,9 @@ export class UserBusiness {
 		if (!verifyPassword) {
 			throw new BadRequest("'usuario' - não encontrado, tente novamente");
 		}
+		console.log(exists.password);
+		console.log(password);
+
 		const usuario: UserDB | undefined = await userDB.login(
 			email,
 			exists.password
@@ -186,7 +188,7 @@ export class UserBusiness {
 		const output: LoginDB = {
 			message: "usuario logado com sucesso!",
 			usuario,
-			token: token,
+			token
 		};
 		return output;
 	}

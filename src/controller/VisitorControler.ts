@@ -128,7 +128,6 @@ export class VisitorControler {
 				res.status(err.statusCode).send(err.message);
 			} else {
 				res.status(500).send("erro inesperado");
-				console.log(err);
 			}
 		}
 	};
@@ -144,7 +143,6 @@ export class VisitorControler {
 				res.status(err.statusCode).send(err.message);
 			} else {
 				res.status(500).send("erro inesperado");
-				console.log(err);
 			}
 		}
 	};

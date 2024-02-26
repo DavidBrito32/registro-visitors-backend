@@ -34,8 +34,6 @@ export class UserControler {
 			const ID = req.params.id;
 			const Data = req.body;
 			const editar = new UserBusiness();
-			console.log(Data);
-
 			await editar.editUser(ID, Data);
 			res.status(200).send("Usuario Editado com sucesso! 🎆");
 		}catch (err) {
@@ -49,7 +47,6 @@ export class UserControler {
 	public async deleteUser(req: Request, res: Response){
 		try{
 			const ID = req.params.id;
-			console.log(ID);
 			const DEL = new UserBusiness();
 			await DEL.deleteUser(ID);
 			res.status(200).send("Usuario Deletado com sucesso! 🎆");
