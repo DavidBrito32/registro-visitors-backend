@@ -16,6 +16,7 @@ export class UserControler {
 			}
 		}
 	}
+	
 	public async createUser(req: Request, res: Response){
 		try{
 			const usuario = new UserBusiness();
@@ -29,6 +30,7 @@ export class UserControler {
 			}
 		}
 	}
+	
 	public async editUser(req: Request, res: Response){
 		try{
 			const ID = req.params.id;
@@ -44,6 +46,7 @@ export class UserControler {
 			}
 		}
 	}
+	
 	public async deleteUser(req: Request, res: Response){
 		try{
 			const ID = req.params.id;
@@ -58,6 +61,7 @@ export class UserControler {
 			}
 		}
 	}
+	
 	public async login(req: Request, res: Response){
 		try{
 			const input = req.body;

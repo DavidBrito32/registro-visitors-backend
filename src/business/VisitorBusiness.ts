@@ -1,4 +1,5 @@
 import { VisitorDb } from "../database/VisitorDb";
+import { CreateVisitorInputDTO, CreateVisitorOutPutDTO, EditVisitoriInputDTO, GetVisitorInput, GetVisitorOutput } from "../dto/visitorDTO";
 import { BadRequest } from "../errors/BadRequest";
 import { NotFound } from "../errors/NotFound";
 import { Visitor } from "../models/Visitor";
@@ -6,13 +7,18 @@ import { IdGenerator } from "../services/uuid/IdGenerator";
 import { BlockedVisitor, VisitorDB } from "../types/types";
 
 export class VisitorBusiness {
-	public getAllVisitors = async (name: string): Promise<Array<Visitor>> => {
-		const DB = new VisitorDb();
+	constructor(
+		protected visitorDb: VisitorDb,
+		protected idGenerator: IdGenerator
+	){}
+	public getAllVisitors = async (input: GetVisitorInput): Promise<GetVisitorOutput> => {
+		const { name }= input;
+		const DB = this.visitorDb;
 		let visitantes: VisitorDB[];
+		let saida: Array<Visitor> = [];
 		if (name) {
-			visitantes = await DB.getByQueryParams(name);
-			
-			const visit: Array<Visitor> = visitantes.map(
+			visitantes = await DB.getByQueryParams(name);			
+			saida = visitantes.map(
 				(item: VisitorDB) =>
 					new Visitor(
 						item.id,
@@ -25,11 +31,10 @@ export class VisitorBusiness {
 						item.profession,
 						item.created_at
 					)
-			);
-			return visit;
+			);			
 		} else {
 			visitantes = await DB.getAllVisitors();
-			const visit: Array<Visitor> = visitantes.map(
+			saida = visitantes.map(
 				(item: VisitorDB) =>
 					new Visitor(
 						item.id,
@@ -42,16 +47,19 @@ export class VisitorBusiness {
 						item.profession,
 						item.created_at
 					)
-			);
-			return visit;
+			);	
 		}
+		const output: GetVisitorOutput = {
+			visitantes: saida
+		};
+		return output;
 	};
 
 	public getVisitorByCpF = async (CPF: string): Promise<VisitorDB | undefined> => {
 		if (typeof CPF !== "string") {
 			throw new BadRequest("'CPF' - Deve ser Informado no formato de TEXTO");
 		}
-		const DATABASE = new VisitorDb();
+		const DATABASE = this.visitorDb;
 		const VISITOR: VisitorDB | undefined = await DATABASE.getVisitorByCpF(CPF);
 		if (!VISITOR) {
 			throw new BadRequest("'CPF' - Não Encontrado, Favor Realizar Cadastro");
@@ -60,85 +68,19 @@ export class VisitorBusiness {
 	};
 
 	public checkVisit = async (id: string): Promise<void> => {
-		const Visit = new VisitorDb();
+		const Visit = this.visitorDb;
 		const Data = new Date().toString();
 		await Visit.checkVisit(id, Data);
 	};
 
-	public createVisitors = async (object: VisitorDB): Promise<void> => {
+	public createVisitors = async (object: CreateVisitorInputDTO): Promise<CreateVisitorOutPutDTO> => {
 		const { name, cpf, gender, age, profession, city, state } = object;
 
-		if (!name) {
-			throw new BadRequest(
-				"'name' - é um campo obrigatorio, por tanto deverá ser informado"
-			);
-		}
-		if (!cpf) {
-			throw new BadRequest(
-				"'cpf' - é um campo obrigatorio, por tanto deverá ser informado"
-			);
-		}
-		if (!gender) {
-			throw new BadRequest(
-				"'gender' - é um campo obrigatorio, por tanto deverá ser informado"
-			);
-		}
-		if (!age) {
-			throw new BadRequest(
-				"'age' - é um campo obrigatorio, por tanto deverá ser informado"
-			);
-		}
-		if (!profession) {
-			throw new BadRequest(
-				"'profession' - é um campo obrigatorio, por tanto deverá ser informado"
-			);
-		}
-		if (!city) {
-			throw new BadRequest(
-				"'city' - é um campo obrigatorio, por tanto deverá ser informado"
-			);
-		}
-		if (!state) {
-			throw new BadRequest(
-				"'state' - é um campo obrigatorio, por tanto deverá ser informado"
-			);
-		}
-		if (typeof name !== "string") {
-			throw new BadRequest("'name' - deve ser enviado no formato string");
-		}
-		if (typeof cpf !== "string") {
-			throw new BadRequest("'cpf' - deve ser enviado no formato string");
-		}
-		if (cpf.length < 15 && cpf.length > 15) {
-			throw new BadRequest("'cpf' - deve conter 15 caracteres ex: '000.000.000-00'");
-		}
-		if (typeof gender !== "string") {
-			throw new BadRequest("'gender' - deve ser enviado no formato string");
-		}		
-		if (typeof profession !== "string") {
-			throw new BadRequest("'profession' - deve ser enviado no formato string");
-		}
-		if (typeof city !== "string") {
-			throw new BadRequest("'city' - deve ser enviado no formato string");
-		}
-		if (typeof state !== "string") {
-			throw new BadRequest("'state' - deve ser enviado no formato string");
-		}
-		const CriarUsuario = new IdGenerator();
+		const CriarUsuario = this.idGenerator;
 
 		const id = CriarUsuario.generate();
-		const visitante = new Visitor(
-			id,
-			name,
-			cpf,
-			gender,
-			age,
-			city,
-			state,
-			profession,
-			new Date().toISOString()
-		);
-		const VerificaCPF = new VisitorDb();
+		const visitante = new Visitor( id, name, cpf, gender, age, city, state, profession, new Date().toISOString());
+		const VerificaCPF = this.visitorDb;
 
 		const existe: VisitorDB | undefined = await VerificaCPF.getVisitorByCpF(cpf);
 		
@@ -146,7 +88,7 @@ export class VisitorBusiness {
 			throw new NotFound("Verifique os Dados e tente novamente");
 		}
 
-		const visitanteDB = new VisitorDb();
+		const visitanteDB = this.visitorDb;
 		await visitanteDB.createVisitor(
 			visitante.getId(),
 			visitante.getName(),
@@ -157,10 +99,19 @@ export class VisitorBusiness {
 			visitante.getCity(),
 			visitante.getState()
 		);
+
+		const output: CreateVisitorOutPutDTO = {
+			message: "Visitante cadastradom com sucesso 🎆",
+			visitante: visitante
+		};
+
+		return output;
 	};
 
-	public editVisitor = async (id: string, input: VisitorDB): Promise<void> => {
-		const visitante = new VisitorDb();
+	public editVisitor = async (id: string, input: EditVisitoriInputDTO): Promise<void> => {
+
+		const visitante = this.visitorDb;
+
 		const visitorToEdit: VisitorDB | undefined = await visitante.getVisitorById(
 			id
 		);
@@ -219,7 +170,7 @@ export class VisitorBusiness {
 	};
 
 	public deleteVisitor = async (id: string): Promise<void> => {
-		const visitor = new VisitorDb();
+		const visitor = this.visitorDb;
 
 		const existe: VisitorDB | undefined = await visitor.getVisitorById(id);
 
@@ -230,7 +181,7 @@ export class VisitorBusiness {
 	};
 
 	public blockVisitor = async (id: string, message: string): Promise<void> => {
-		const Visitante = new VisitorDb();
+		const Visitante = this.visitorDb;
 		if(typeof message !== "string"){
 			throw new BadRequest("Verifique o tipo de dado e tente novamente"); 
 		}
@@ -250,7 +201,7 @@ export class VisitorBusiness {
 	};
 
 	public unlockVisitor = async (id: string): Promise<void> => {
-		const blocked: VisitorDb = new VisitorDb();
+		const blocked: VisitorDb = this.visitorDb;
 		const exists: BlockedVisitor | undefined = await blocked.getBlockedVisitorById(id);
 
 		if(!exists){
@@ -261,7 +212,7 @@ export class VisitorBusiness {
 	};
 
 	public getallBlockedVisitor = async (): Promise<Array<BlockedVisitor>> => {
-		const blockedUsers = new VisitorDb();
+		const blockedUsers = this.visitorDb;
 		const bloqueados: Array<BlockedVisitor> = await blockedUsers.getallBlockedVisitor();
 		return bloqueados;
 	};

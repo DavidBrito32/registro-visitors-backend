@@ -77,7 +77,7 @@ CREATE TABLE
 SELECT
     *
 FROM
-    registro;
+    user;
 
 SELECT
     *

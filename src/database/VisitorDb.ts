@@ -49,56 +49,14 @@ export class VisitorDb extends Database {
 			.into("registro");
 	};
 
-	public async createVisitor(
-		id: string,
-		name: string,
-		cpf: string,
-		age: number,
-		gender: string,
-		profession: string,
-		city: string,
-		state: string
-	): Promise<void> {
-		await Database.connection
-			.insert({
-				id,
-				name,
-				cpf,
-				age,
-				gender,
-				profession,
-				city,
-				state,
-				created_at: new Date().toISOString(),
-			})
-			.into("visitor");
+	public async createVisitor(id: string,	name: string, cpf: string,	age: number, gender: string, profession: string, city: string, state: string): Promise<void> {
+		await Database.connection.insert({id, name, cpf, age, gender, profession, city, state, created_at: new Date().toISOString(),}).into("visitor");
 
 		await this.checkVisit(id, new Date().toISOString());
 	}
 
-	public async editVisitor(
-		id: string,
-		name: string,
-		cpf: string,
-		age: number,
-		gender: string,
-		profession: string,
-		city: string,
-		state: string
-	): Promise<void> {
-		await Database.connection("visitor")
-			.update({
-				name,
-				cpf,
-				age,
-				gender,
-				profession,
-				city,
-				state,
-			})
-			.where({
-				id: id,
-			});
+	public async editVisitor(id: string, name: string, cpf: string, age: number, gender: string, profession: string, city: string, state: string): Promise<void> {
+		await Database.connection("visitor").update({ name, cpf, age, gender, profession, city, state,}).where({ id: id,});
 	}
 
 	public async deleteVisitor(id: string): Promise<void> {

@@ -124,6 +124,8 @@ export class UserBusiness {
 		}
 		const DataBase = new UserDb();
 		const UsuarioEditado: UserDB | undefined = await DataBase.getUsersById(id);
+		
+		const newPassword = await bcrypt.hash(password, 12);
 		if (!UsuarioEditado) {
 			throw new ValidationError("'Usuario' -  não encontrado");
 		}
@@ -134,7 +136,7 @@ export class UserBusiness {
 			cpf: cpf || UsuarioEditado.cpf,
 			role: role || UsuarioEditado.role,
 			email: email || UsuarioEditado.email,
-			password: password || UsuarioEditado.password,
+			password: newPassword || UsuarioEditado.password,
 			created_at: UsuarioEditado.created_at
 		};
 

@@ -1,9 +1,12 @@
 import express from "express";
 import { VisitorControler } from "../controller/VisitorControler";
+import { VisitorBusiness } from "../business/VisitorBusiness";
+import { VisitorDb } from "../database/VisitorDb";
+import { IdGenerator } from "../services/uuid/IdGenerator";
 
 export const VisitorRouter = express.Router();
 
-const visitante = new VisitorControler();
+const visitante = new VisitorControler(new VisitorBusiness(new VisitorDb, new IdGenerator));
 
 VisitorRouter.get("/", visitante.getAllVisitor);
 
