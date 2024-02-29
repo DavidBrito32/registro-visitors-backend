@@ -3,9 +3,14 @@ import { UserBusiness } from "../business/UserBusiness";
 import { CustomError } from "../errors/CustomError";
 
 export class UserControler {
-	public async getAllUsers(req: Request, res: Response){
+	constructor(
+		protected userBusiness: UserBusiness
+	){
+	}
+	
+	public getAllUsers = async (req: Request, res: Response): Promise<void> => {
 		try{
-			const user = new UserBusiness();
+			const user = this.userBusiness;
 			const userReturn = await user.getAllUsers();
 			res.status(200).send(userReturn);
 		}catch (err) {
@@ -15,11 +20,11 @@ export class UserControler {
 				res.status(500).send("erro inesperado");
 			}
 		}
-	}
+	};
 	
-	public async createUser(req: Request, res: Response){
+	public createUser = async (req: Request, res: Response): Promise<void> => {
 		try{
-			const usuario = new UserBusiness();
+			const usuario = this.userBusiness;
 			await usuario.createUser(req.body);
 			res.status(200).send("Usuario Criado com sucesso! 🎆");
 		}catch (err) {
@@ -29,13 +34,13 @@ export class UserControler {
 				res.status(500).send("erro inesperado");
 			}
 		}
-	}
+	};
 	
-	public async editUser(req: Request, res: Response){
+	public editUser = async (req: Request, res: Response): Promise<void> => {
 		try{
 			const ID = req.params.id;
 			const Data = req.body;
-			const editar = new UserBusiness();
+			const editar = this.userBusiness;
 			await editar.editUser(ID, Data);
 			res.status(200).send("Usuario Editado com sucesso! 🎆");
 		}catch (err) {
@@ -45,12 +50,12 @@ export class UserControler {
 				res.status(500).send("erro inesperado");
 			}
 		}
-	}
+	};
 	
-	public async deleteUser(req: Request, res: Response){
+	public deleteUser = async (req: Request, res: Response): Promise<void> => {
 		try{
 			const ID = req.params.id;
-			const DEL = new UserBusiness();
+			const DEL = this.userBusiness;
 			await DEL.deleteUser(ID);
 			res.status(200).send("Usuario Deletado com sucesso! 🎆");
 		}catch (err) {
@@ -60,12 +65,12 @@ export class UserControler {
 				res.status(500).send("erro inesperado");
 			}
 		}
-	}
+	};
 	
-	public async login(req: Request, res: Response){
+	public login = async (req: Request, res: Response): Promise<void> => {
 		try{
 			const input = req.body;
-			const USER = new UserBusiness();
+			const USER = this.userBusiness;
 
 			const usuario = await USER.login(input);
 			res.send(usuario);
@@ -76,5 +81,5 @@ export class UserControler {
 				res.status(500).send("erro inesperado");
 			}
 		}
-	}
+	};
 }

@@ -6,24 +6,31 @@ import { IdGenerator } from "../services/uuid/IdGenerator";
 import { LoginDB, UserDB } from "../types/types";
 import { ValidationError } from "../errors/ValidationError";
 import { BadRequest } from "../errors/BadRequest";
+import { GetUserOutPutDTO } from "../dto/userDTO";
 
 export class UserBusiness {
-	public async getAllUsers(): Promise<Array<User>> {
-		const user = new UserDb();
+	constructor(
+		protected userDb: UserDb
+	){
+	}
+	public async getAllUsers(): Promise<GetUserOutPutDTO> { 
+		const user = this.userDb;
 		const userList: Array<UserDB> = await user.getUsers();
-		const userReturn = userList.map(
-			(item) =>
-				new User(
-					item.id,
-					item.name,
-					item.role,
-					item.cpf,
-					item.email,
-					item.password,
-					item.created_at
-				)
+		const userReturn = userList.map((item) => new User(
+			item.id,
+			item.name,
+			item.role,
+			item.cpf,
+			item.email,
+			item.password,
+			item.created_at
+		)
 		);
-		return userReturn;
+		const output: GetUserOutPutDTO = {
+			usuarios: userReturn
+		};
+
+		return output;
 	}
 
 	public async createUser(input: UserDB): Promise<void> {
@@ -75,7 +82,7 @@ export class UserBusiness {
 			new Date().toISOString()
 		);
 
-		const Database = new UserDb();
+		const Database = this.userDb;
 		const existe: UserDB | undefined = await Database.getByCpf(cpf);
 
 		if (existe) {
@@ -122,7 +129,7 @@ export class UserBusiness {
 		if (typeof id !== "string") {
 			throw new ValidationError("'id' - deve ser uma string");
 		}
-		const DataBase = new UserDb();
+		const DataBase = this.userDb;
 		const UsuarioEditado: UserDB | undefined = await DataBase.getUsersById(id);
 		
 		const newPassword = await bcrypt.hash(password, 12);
@@ -147,7 +154,7 @@ export class UserBusiness {
 		if (typeof id !== "string") {
 			throw new ValidationError("'id' - deve ser enviado no formato string");
 		}
-		const DataBase = new UserDb();
+		const DataBase = this.userDb;
 		const userDel: UserDB | undefined = await DataBase.getUsersById(id);
 		if (!userDel) {
 			throw new ValidationError("'Usuario' - não encontrado");
@@ -157,7 +164,7 @@ export class UserBusiness {
 
 	public async login(input: UserDB): Promise<LoginDB> {
 		const { email, password } = input;
-		const userDB = new UserDb();
+		const userDB = this.userDb;
 		const exists: UserDB | undefined = await userDB.getUserByEmail(email);
 		if (!exists) {
 			throw new BadRequest("usuario não encontrado");
@@ -165,10 +172,8 @@ export class UserBusiness {
 
 		const verifyPassword = await bcrypt.compare(password, exists.password);
 		if (!verifyPassword) {
-			throw new BadRequest("'usuario' - não encontrado, tente novamente");
+			throw new BadRequest("Verifique os dados informados e tente novamente");
 		}
-		console.log(exists.password);
-		console.log(password);
 
 		const usuario: UserDB | undefined = await userDB.login(
 			email,

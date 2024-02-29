@@ -1,9 +1,11 @@
 import express from "express";
 import { UserControler } from "../controller/UserControler";
+import { UserBusiness } from "../business/UserBusiness";
+import { UserDb } from "../database/UserDb";
 
 export const UserRouter = express.Router();
 
-const user = new UserControler();
+const user = new UserControler(new UserBusiness(new UserDb()));
 
 UserRouter.get("/", user.getAllUsers);
 
