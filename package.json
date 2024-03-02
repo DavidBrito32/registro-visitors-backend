@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsnd src/index.ts",
-    "start": "node build/index.ts",
+    "start": "tsnd build/index.ts",
     "build": "tsc",
     "lint": "npx eslint --fix ./"
   },
@@ -21,11 +21,14 @@
     "@types/jsonwebtoken": "^9.0.5",
     "@types/knex": "^0.16.1",
     "@types/node": "^20.11.16",
+    "@types/swagger-ui-express": "^4.1.6",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "eslint": "^8.56.0",
     "jsonwebtoken": "^9.0.2",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
   },

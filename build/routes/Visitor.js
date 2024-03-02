@@ -1,0 +1,23 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.VisitorRouter = void 0;
+const express_1 = __importDefault(require("express"));
+const VisitorControler_1 = require("../controller/VisitorControler");
+const VisitorBusiness_1 = require("../business/VisitorBusiness");
+const VisitorDb_1 = require("../database/VisitorDb");
+const IdGenerator_1 = require("../services/uuid/IdGenerator");
+exports.VisitorRouter = express_1.default.Router();
+const visitante = new VisitorControler_1.VisitorControler(new VisitorBusiness_1.VisitorBusiness(new VisitorDb_1.VisitorDb, new IdGenerator_1.IdGenerator));
+exports.VisitorRouter.get("/", visitante.getAllVisitor);
+exports.VisitorRouter.get("/results", visitante.getResults);
+exports.VisitorRouter.post("/", visitante.createVisitor);
+exports.VisitorRouter.get("/blacklist", visitante.getallBlockedVisitor);
+exports.VisitorRouter.post("/block/:id", visitante.blockVisitor);
+exports.VisitorRouter.delete("/block/:id", visitante.unlockVisitor);
+exports.VisitorRouter.post("/registred", visitante.getVisitorByCpF);
+exports.VisitorRouter.put("/:id", visitante.editVisitor);
+exports.VisitorRouter.delete("/:id", visitante.deleteVisitor);
+exports.VisitorRouter.delete("/block/:id", visitante.unlokVisitor);

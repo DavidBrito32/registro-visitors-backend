@@ -54,4 +54,5 @@ export interface LoginDB {
   message: string;
   usuario: UserDB;
   token: string;
+  route: string;
 }

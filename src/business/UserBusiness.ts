@@ -6,14 +6,13 @@ import { IdGenerator } from "../services/uuid/IdGenerator";
 import { LoginDB, UserDB } from "../types/types";
 import { ValidationError } from "../errors/ValidationError";
 import { BadRequest } from "../errors/BadRequest";
-import { GetUserOutPutDTO } from "../dto/userDTO";
-
+import { LoginInputDto, LoginOutputDto } from "../dto/userDTO";
 export class UserBusiness {
 	constructor(
 		protected userDb: UserDb
 	){
 	}
-	public async getAllUsers(): Promise<GetUserOutPutDTO> { 
+	public async getAllUsers() { 
 		const user = this.userDb;
 		const userList: Array<UserDB> = await user.getUsers();
 		const userReturn = userList.map((item) => new User(
@@ -26,7 +25,7 @@ export class UserBusiness {
 			item.created_at
 		)
 		);
-		const output: GetUserOutPutDTO = {
+		const output = {
 			usuarios: userReturn
 		};
 
@@ -162,7 +161,7 @@ export class UserBusiness {
 		await DataBase.deleteUser(userDel.id);
 	}
 
-	public async login(input: UserDB): Promise<LoginDB> {
+	public async login(input: LoginInputDto): Promise<LoginOutputDto> {
 		const { email, password } = input;
 		const userDB = this.userDb;
 		const exists: UserDB | undefined = await userDB.getUserByEmail(email);
@@ -195,8 +194,10 @@ export class UserBusiness {
 		const output: LoginDB = {
 			message: "usuario logado com sucesso!",
 			usuario,
-			token
+			token,
+			route: "/admin"
 		};
+
 		return output;
 	}
 

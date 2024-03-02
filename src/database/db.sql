@@ -77,12 +77,12 @@ CREATE TABLE
 SELECT
     *
 FROM
-    user;
+    visitor;
 
 SELECT
     *
 FROM
-   visitor;
+   user;
 
 CREATE TABLE IF NOT EXISTS visitors_block(
     id TEXT NOT NULL PRIMARY KEY,

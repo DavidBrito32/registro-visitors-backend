@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { UserBusiness } from "../business/UserBusiness";
 import { CustomError } from "../errors/CustomError";
+import { LoginSchema } from "./../dto/userDTO";
+import { ZodError } from "zod";
 
 export class UserControler {
 	constructor(
 		protected userBusiness: UserBusiness
 	){
-	}
-	
+	}	
 	public getAllUsers = async (req: Request, res: Response): Promise<void> => {
 		try{
 			const user = this.userBusiness;
@@ -69,13 +70,13 @@ export class UserControler {
 	
 	public login = async (req: Request, res: Response): Promise<void> => {
 		try{
-			const input = req.body;
 			const USER = this.userBusiness;
-
-			const usuario = await USER.login(input);
-			res.send(usuario);
+			const input = LoginSchema.parse(req.body);
+			res.send(await USER.login(input));
 		}catch (err) {
-			if (err instanceof CustomError) {
+			if (err instanceof ZodError) {
+				res.status(400).send(err.issues);
+			} else if (err instanceof CustomError) {
 				res.status(err.statusCode).send(err.message);
 			} else {
 				res.status(500).send("erro inesperado");
