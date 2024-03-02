@@ -3,7 +3,7 @@ export class Visitor {
 	protected name: string;
 	protected cpf: string;
 	protected gender: string;
-	protected age: number;
+	protected age: string;
 	protected profession: string;
 	protected city: string;
 	protected state: string;
@@ -14,7 +14,7 @@ export class Visitor {
 		name: string,
 		cpf: string,
 		gender: string,
-		age: number,
+		age: string,
 		city: string,
 		state: string,
 		profession: string,
@@ -63,11 +63,11 @@ export class Visitor {
 		this.gender = gender;
 	}
 
-	public getAge(): number {
+	public getAge(): string {
 		return this.age;
 	}
 
-	public setAge(age: number): void {
+	public setAge(age: string): void {
 		this.age = age;
 	}
 

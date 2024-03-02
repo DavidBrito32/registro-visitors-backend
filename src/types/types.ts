@@ -3,7 +3,7 @@ export interface VisitorDB {
   name: string;
   cpf: string;
   gender: string;
-  age: number;
+  age: string;
   profession: string;
   city: string;
   state: string;
@@ -18,6 +18,29 @@ export interface UserDB {
   role: string;
   password: string;
   created_at: string;
+}
+
+export interface GenderDB {
+  name: string;
+  total: number;
+}
+export interface CityDB {
+  name: string;
+  total: number;
+}
+export interface StateDB {
+  name: string;
+  total: number;
+}
+export interface ProfessionDB {
+  name: string;
+  total: number;
+}
+export interface ResultsDB {
+  gender: Array<GenderDB>,
+  city: Array<CityDB>,
+  state: Array<StateDB>,
+  profession: Array<ProfessionDB>
 }
 
 export interface BlockedVisitor {

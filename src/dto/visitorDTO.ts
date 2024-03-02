@@ -24,7 +24,7 @@ export interface CreateVisitorInputDTO {
     name: string; 
 	cpf: string; 
 	gender: string; 
-	age: number; 
+	age: string; 
 	profession: string; 
 	city: string; 
 	state: string;
@@ -48,10 +48,10 @@ export const CreateVisitorSchema = z.object({
 			invalid_type_error: "'cpf': deve ser do tipo string",
 		}
 	).min(1), 
-	age: z.number(
+	age: z.string(
 		{
 			required_error: "'age' é um campo obrigatorio",
-			invalid_type_error: "'age': deve ser do tipo number",
+			invalid_type_error: "'age': deve ser do tipo STRING",
 		}
 	).min(1), 
 	profession: z.string({
@@ -76,7 +76,7 @@ export interface EditVisitoriInputDTO {
 	name?: string; 
 	cpf?: string; 
 	gender?: string; 
-	age?: number; 
+	age?: string; 
 	profession?: string; 
 	city?: string; 
 	state?: string;
@@ -95,7 +95,7 @@ export const EditVisitorSchema = z.object({
 	name: z.string({invalid_type_error: "'name': deve ser do tipo string"}).min(1).optional(), 	
 	cpf: z.string({invalid_type_error: "'cpf': deve ser do tipo string",}).min(14), 
 	gender: z.string({invalid_type_error: "'cpf': deve ser do tipo string",}).min(1).optional(), 
-	age: z.number({invalid_type_error: "'age': deve ser do tipo number",}).min(1).optional(), 
+	age: z.string({invalid_type_error: "'age': deve ser do tipo string",}).min(1).optional(), 
 	profession: z.string({invalid_type_error: "'profession': deve ser do tipo string",}).min(1).optional(), 
 	city: z.string({invalid_type_error: "'city': deve ser do tipo string",}).min(1).optional(), 
 	state: z.string({invalid_type_error: "'state': deve ser do tipo string",}).min(1).optional() 

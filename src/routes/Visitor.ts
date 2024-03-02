@@ -10,6 +10,8 @@ const visitante = new VisitorControler(new VisitorBusiness(new VisitorDb, new Id
 
 VisitorRouter.get("/", visitante.getAllVisitor);
 
+VisitorRouter.get("/results", visitante.getResults);
+
 VisitorRouter.post("/", visitante.createVisitor);
 
 VisitorRouter.get("/blacklist", visitante.getallBlockedVisitor);

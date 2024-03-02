@@ -38,9 +38,7 @@ export class VisitorControler {
 			);
 		} catch (err) {
 			if(err instanceof ZodError){
-				res.status(400).send(err.issues);
-				console.log(err.message);
-				
+				res.status(400).send(err.issues);				
 			}else if (err instanceof CustomError) {
 				res.status(err.statusCode).send(err.message);
 			} else {
@@ -54,7 +52,7 @@ export class VisitorControler {
 			const data: CreateVisitorInputDTO = CreateVisitorSchema.parse(req.body);
 			const postUser = this.visitorBusiness;
 			const output = await postUser.createVisitors(data);
-			res.status(201).send(output.visitante);
+			res.status(201).send(output);
 		} catch (err) {
 			if(err instanceof ZodError){
 				res.status(400).send(err.issues);		
@@ -75,8 +73,7 @@ export class VisitorControler {
 			res.status(200).send("Visitante Editado com sucesso");
 		} catch (err) {
 			if(err instanceof ZodError){
-				res.status(400).send(err.issues);
-				console.log(err.message);				
+				res.status(400).send(err.issues);		
 			}else if (err instanceof CustomError) {
 				res.status(err.statusCode).send(err.message);
 			} else {
@@ -92,9 +89,7 @@ export class VisitorControler {
 			res.status(200).send("Usuario excluido com sucesso");
 		} catch (err) {
 			if(err instanceof ZodError){
-				res.status(400).send(err.issues);
-				console.log(err.message);
-				
+				res.status(400).send(err.issues);				
 			}else if (err instanceof CustomError) {
 				res.status(err.statusCode).send(err.message);
 			} else {
@@ -112,9 +107,7 @@ export class VisitorControler {
 			res.status(201).send("visitante bloqueado com sucesso!");
 		} catch (err) {
 			if(err instanceof ZodError){
-				res.status(400).send(err.issues);
-				console.log(err.message);
-				
+				res.status(400).send(err.issues);				
 			}else if (err instanceof CustomError) {
 				res.status(err.statusCode).send(err.message);
 			} else {
@@ -132,9 +125,7 @@ export class VisitorControler {
 			res.status(200).send("Visitante Desbloqueado com sucesso");
 		} catch (err) {
 			if(err instanceof ZodError){
-				res.status(400).send(err.issues);
-				console.log(err.message);
-				
+				res.status(400).send(err.issues);				
 			}else if (err instanceof CustomError) {
 				res.status(err.statusCode).send(err.message);
 			} else {
@@ -150,9 +141,7 @@ export class VisitorControler {
 			res.status(200).send(bloqueados);
 		}catch (err) {
 			if(err instanceof ZodError){
-				res.status(400).send(err.issues);
-				console.log(err.message);
-				
+				res.status(400).send(err.issues);				
 			}else if (err instanceof CustomError) {
 				res.status(err.statusCode).send(err.message);
 			} else {
@@ -169,9 +158,22 @@ export class VisitorControler {
 			res.status(200).send("Acesso Liberado ao Museu");
 		}catch (err) {
 			if(err instanceof ZodError){
-				res.status(400).send(err.issues);
-				console.log(err.message);
-				
+				res.status(400).send(err.issues);				
+			}else if (err instanceof CustomError) {
+				res.status(err.statusCode).send(err.message);
+			} else {
+				res.status(500).send("erro inesperado");
+			}
+		}
+	};
+
+	public getResults = async (req: Request, res: Response): Promise<void> => {
+		try{
+			const resultados = await this.visitorBusiness.results();
+			res.status(200).send(resultados);
+		}catch (err) {
+			if(err instanceof ZodError){
+				res.status(400).send(err.issues);				
 			}else if (err instanceof CustomError) {
 				res.status(err.statusCode).send(err.message);
 			} else {

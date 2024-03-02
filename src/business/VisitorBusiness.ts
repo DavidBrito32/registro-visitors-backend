@@ -4,7 +4,7 @@ import { BadRequest } from "../errors/BadRequest";
 import { NotFound } from "../errors/NotFound";
 import { Visitor } from "../models/Visitor";
 import { IdGenerator } from "../services/uuid/IdGenerator";
-import { BlockedVisitor, VisitorDB } from "../types/types";
+import { BlockedVisitor, ResultsDB, VisitorDB } from "../types/types";
 
 export class VisitorBusiness {
 	constructor(
@@ -101,7 +101,7 @@ export class VisitorBusiness {
 		);
 
 		const output: CreateVisitorOutPutDTO = {
-			message: "Visitante cadastradom com sucesso 🎆",
+			message: "Visitante cadastrado com sucesso 💕💕",
 			visitante: visitante
 		};
 
@@ -215,5 +215,10 @@ export class VisitorBusiness {
 		const blockedUsers = this.visitorDb;
 		const bloqueados: Array<BlockedVisitor> = await blockedUsers.getallBlockedVisitor();
 		return bloqueados;
+	};
+
+	public results = async (): Promise<ResultsDB> => {
+		const resultados = await this.visitorDb.results();
+		return resultados;
 	};
 }

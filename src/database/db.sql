@@ -82,8 +82,7 @@ FROM
 SELECT
     *
 FROM
-    registro
-    INNER JOIN visitor ON visitor.id = registro.id_visitor;
+   visitor;
 
 CREATE TABLE IF NOT EXISTS visitors_block(
     id TEXT NOT NULL PRIMARY KEY,

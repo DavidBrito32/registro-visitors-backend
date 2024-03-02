@@ -1,4 +1,4 @@
-import { BlockedVisitor, VisitorDB } from "../types/types";
+import { BlockedVisitor, ResultsDB, VisitorDB } from "../types/types";
 import { Database } from "./knex";
 
 export class VisitorDb extends Database {
@@ -49,13 +49,13 @@ export class VisitorDb extends Database {
 			.into("registro");
 	};
 
-	public async createVisitor(id: string,	name: string, cpf: string,	age: number, gender: string, profession: string, city: string, state: string): Promise<void> {
+	public async createVisitor(id: string,	name: string, cpf: string,	age: string, gender: string, profession: string, city: string, state: string): Promise<void> {
 		await Database.connection.insert({id, name, cpf, age, gender, profession, city, state, created_at: new Date().toISOString(),}).into("visitor");
 
 		await this.checkVisit(id, new Date().toISOString());
 	}
 
-	public async editVisitor(id: string, name: string, cpf: string, age: number, gender: string, profession: string, city: string, state: string): Promise<void> {
+	public async editVisitor(id: string, name: string, cpf: string, age: string, gender: string, profession: string, city: string, state: string): Promise<void> {
 		await Database.connection("visitor").update({ name, cpf, age, gender, profession, city, state,}).where({ id: id,});
 	}
 
@@ -76,5 +76,20 @@ export class VisitorDb extends Database {
 			.from("visitors_block")
 			.join("visitor", "visitor.id", "=", "visitors_block.id_visitor");
 		return block;
+	};
+
+	public results = async (): Promise<ResultsDB> => {
+		const gender = await Database.connection.raw("SELECT gender, COUNT(*) as total FROM visitor GROUP BY gender ORDER BY total DESC;");	
+		const profession = await Database.connection.raw("SELECT LOWER(profession) AS profession, COUNT(*) as total FROM visitor GROUP BY LOWER(profession) ORDER BY total DESC;");
+		const city = await Database.connection.raw("SELECT city, COUNT(*) as total FROM visitor GROUP BY city ORDER BY total DESC;");
+		const state = await Database.connection.raw("SELECT state, COUNT(*) as total FROM visitor GROUP BY state ORDER BY total DESC;");
+
+		const output: ResultsDB = {
+			gender,
+			profession,
+			city,
+			state
+		};
+		return output;
 	};
 }

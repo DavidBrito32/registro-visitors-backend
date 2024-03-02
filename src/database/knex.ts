@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { knex } from "knex";
-
 export abstract class Database {
 	public static connection = knex({
 		client: "sqlite3",
