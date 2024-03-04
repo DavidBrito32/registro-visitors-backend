@@ -80,9 +80,9 @@ FROM
     visitor;
 
 SELECT
-    *
+    COUNT(*) AS total
 FROM
-   user;
+   registro;
 
 CREATE TABLE IF NOT EXISTS visitors_block(
     id TEXT NOT NULL PRIMARY KEY,
@@ -93,5 +93,7 @@ CREATE TABLE IF NOT EXISTS visitors_block(
 
 
 SELECT * FROM visitors_block;
+
+SELECT * FROM user;
 
 

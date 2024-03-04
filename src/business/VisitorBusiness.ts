@@ -62,7 +62,7 @@ export class VisitorBusiness {
 		const DATABASE = this.visitorDb;
 		const VISITOR: VisitorDB | undefined = await DATABASE.getVisitorByCpF(CPF);
 		if (!VISITOR) {
-			throw new BadRequest("'CPF' - Não Encontrado, Favor Realizar Cadastro");
+			throw new BadRequest("❌ CPF invalido ou o usuario ainda não realizou o cadastro");
 		}
 		return VISITOR;
 	};
@@ -220,5 +220,10 @@ export class VisitorBusiness {
 	public results = async (): Promise<ResultsDB> => {
 		const resultados = await this.visitorDb.results();
 		return resultados;
+	};
+
+	public allvisits = async (): Promise<number> => {
+		const Total = await this.visitorDb.allVisits();
+		return Total;
 	};
 }

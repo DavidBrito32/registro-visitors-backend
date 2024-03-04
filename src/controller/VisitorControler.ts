@@ -181,4 +181,18 @@ export class VisitorControler {
 			}
 		}
 	};
+
+	public TotalVisits = async (req: Request, res: Response): Promise<void> => {
+		try{
+			const total = await this.visitorBusiness.allvisits();
+			res.status(200).send(total);
+		}catch (err) {
+			console.log(err);
+			if (err instanceof CustomError) {
+				res.status(err.statusCode).send(err.message);
+			} else {
+				res.status(500).send("erro inesperado");
+			}
+		}
+	};
 }

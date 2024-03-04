@@ -9,6 +9,8 @@ export const VisitorRouter = express.Router();
 
 const visitante = new VisitorControler(new VisitorBusiness(new VisitorDb, new IdGenerator));
 
+VisitorRouter.get("/total-visits", checkToken, visitante.TotalVisits);
+
 VisitorRouter.get("/", checkToken, visitante.getAllVisitor);
 
 VisitorRouter.get("/results", checkToken, visitante.getResults);

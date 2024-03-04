@@ -43,6 +43,8 @@ export interface ResultsDB {
   profession: Array<ProfessionDB>
 }
 
+export type Total = number;
+
 export interface BlockedVisitor {
   id: string;
   name: string;
