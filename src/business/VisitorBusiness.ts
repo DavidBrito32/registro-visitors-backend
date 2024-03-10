@@ -211,7 +211,6 @@ export class VisitorBusiness {
 	public unlockVisitor = async (id: string): Promise<void> => {
 		const blocked: VisitorDb = this.visitorDb;
 		const exists: BlockedVisitor | undefined = await blocked.getBlockedVisitorById(id);
-
 		if(!exists){
 			throw new NotFound("Visitante Não Encontrado");
 		}

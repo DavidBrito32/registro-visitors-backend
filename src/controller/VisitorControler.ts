@@ -28,7 +28,7 @@ export class VisitorControler {
 		}
 	};
 
-	public getVisitorByCpF = async (req: Request,	res: Response): Promise<void> => {
+	public checkVsit = async (req: Request,	res: Response): Promise<void> => {
 		try {
 			const CPF = req.body.cpf;
 			const bloqueado = await this.visitorBusiness.getVisitorBlockedByCpF(CPF);

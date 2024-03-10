@@ -24,8 +24,8 @@ export class VisitorDb extends Database {
 		return visitorSearch;
 	}
 
-	public async getBlockedVisitorById(cpf: string) {
-		const [visitorSearch]: Array<BlockedVisitor> = await Database.connection.raw(`SELECT vb.*, v.cpf FROM	visitors_block vb INNER JOIN visitor v ON vb.id_visitor = v.id WHERE v.cpf = '${cpf}';`);
+	public async getBlockedVisitorById(id: string) {
+		const [visitorSearch]: Array<BlockedVisitor> = await Database.connection.raw(`SELECT vb.*, v.cpf FROM visitors_block vb INNER JOIN visitor v ON vb.id_visitor = v.id WHERE v.id = '${id}';`);
 		return visitorSearch;
 	}
 

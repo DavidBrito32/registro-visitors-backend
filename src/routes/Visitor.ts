@@ -23,7 +23,7 @@ VisitorRouter.post("/block/:id", checkToken, visitante.blockVisitor);
 
 VisitorRouter.delete("/block/:id", checkToken, visitante.unlockVisitor);
 
-VisitorRouter.post("/registred", visitante.getVisitorByCpF);
+VisitorRouter.post("/registred", visitante.checkVsit);
 
 VisitorRouter.put("/:id", checkToken, visitante.editVisitor);
 
