@@ -64,9 +64,11 @@ SELECT
 FROM
     user;
 
-    UPDATE FROM "user"
-    SET password = "davi1234"
-
+UPDATE
+FROM
+    "user"
+SET
+    password = "davi1234"
 CREATE TABLE
     IF NOT EXISTS registro (
         id_visitor TEXT NOT NULL,
@@ -82,18 +84,30 @@ FROM
 SELECT
     COUNT(*) AS total
 FROM
-   registro;
+    registro;
 
-CREATE TABLE IF NOT EXISTS visitors_block(
-    id TEXT NOT NULL PRIMARY KEY,
-    id_visitor TEXT NOT NULL,
-    message TEXT NOT NULL,
-    FOREIGN KEY(id_visitor) REFERENCES visitor(id) ON UPDATE CASCADE ON DELETE CASCADE
-);
+CREATE TABLE
+    IF NOT EXISTS visitors_block (
+        id TEXT NOT NULL PRIMARY KEY,
+        id_visitor TEXT NOT NULL,
+        message TEXT NOT NULL,
+        FOREIGN KEY (id_visitor) REFERENCES visitor (id) ON UPDATE CASCADE ON DELETE CASCADE
+    );
+
+SELECT
+    *
+FROM
+    visitors_block;
+
+SELECT 
+    v.*, 
+    vb.message
+FROM 
+    visitor v
+INNER JOIN 
+    visitors_block vb ON v.id = vb.id_visitor
+WHERE 
+    v.cpf = '458.956.123-52';
 
 
-SELECT * FROM visitors_block;
-
-SELECT * FROM user;
-
-
+INSERT INTO visitors_block(id, id_visitor, message) VALUES ('B001','e35729ea-2d32-4c36-9a90-6cbb06c42ce', 'Tocou fogo no museu');

@@ -4,6 +4,8 @@ import { VisitorBusiness } from "../business/VisitorBusiness";
 import {  CustomError } from "../errors/CustomError";
 import { CreateVisitorInputDTO, CreateVisitorSchema, EditVisitorSchema, GetVisitorInput, GetVisitorSchema } from "../dto/visitorDTO";
 import { ZodError } from "zod";
+import { BadRequest } from "../errors/BadRequest";
+import { ForbiddenError } from "../errors/ForbiddenError";
 
 export class VisitorControler {
 	constructor(
@@ -29,11 +31,22 @@ export class VisitorControler {
 	public getVisitorByCpF = async (req: Request,	res: Response): Promise<void> => {
 		try {
 			const CPF = req.body.cpf;
+			const bloqueado = await this.visitorBusiness.getVisitorBlockedByCpF(CPF);
+
+			if(bloqueado){
+				throw new ForbiddenError("Usuario impedido de acessar o Museu");
+			}
 			const Visitor = this.visitorBusiness;
 			const VISITANTE: VisitorDB | undefined = await Visitor.getVisitorByCpF(CPF);
+
+
 			if (VISITANTE) {
 				await Visitor.checkVisit(VISITANTE.id);
 			}
+			if(!VISITANTE){
+				throw new BadRequest("CPF não cadastrado");
+			}
+
 			res.status(200).send(VISITANTE && {name: VISITANTE.name,}
 			);
 		} catch (err) {

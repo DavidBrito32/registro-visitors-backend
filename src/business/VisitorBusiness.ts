@@ -67,6 +67,15 @@ export class VisitorBusiness {
 		return VISITOR;
 	};
 
+	public getVisitorBlockedByCpF = async (CPF: string) => {
+		if (typeof CPF !== "string") {
+			throw new BadRequest("'CPF' - Deve ser Informado no formato de TEXTO");
+		}
+		const DATABASE = this.visitorDb;
+		const VISITOR = await DATABASE.finVisitorBlockedByCPF(CPF);
+		return VISITOR;
+	};
+
 	public checkVisit = async (id: string): Promise<void> => {
 		const Visit = this.visitorDb;
 		const Data = new Date().toString();
@@ -111,7 +120,6 @@ export class VisitorBusiness {
 	public editVisitor = async (id: string, input: EditVisitoriInputDTO): Promise<void> => {
 
 		const visitante = this.visitorDb;
-
 		const visitorToEdit: VisitorDB | undefined = await visitante.getVisitorById(
 			id
 		);
@@ -183,7 +191,7 @@ export class VisitorBusiness {
 	public blockVisitor = async (id: string, message: string): Promise<void> => {
 		const Visitante = this.visitorDb;
 		if(typeof message !== "string"){
-			throw new BadRequest("Verifique o tipo de dado e tente novamente"); 
+			throw new BadRequest("'message': é um campo obrigatorio para esta operação"); 
 		}
 		if(!id){
 			throw new BadRequest("Dados ausentes, favor verificar e tentar novamente"); 

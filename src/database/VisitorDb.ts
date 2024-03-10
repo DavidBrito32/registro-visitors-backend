@@ -24,17 +24,20 @@ export class VisitorDb extends Database {
 		return visitorSearch;
 	}
 
-	public async getBlockedVisitorById(
-		id: string
-	): Promise<BlockedVisitor | undefined> {
-		const [visitorSearch]: Array<BlockedVisitor> = await Database.connection
-			.select("*")
-			.from("visitors_block")
-			.where({ id: id });
+	public async getBlockedVisitorById(cpf: string) {
+		const [visitorSearch]: Array<BlockedVisitor> = await Database.connection.raw(`SELECT vb.*, v.cpf FROM	visitors_block vb INNER JOIN visitor v ON vb.id_visitor = v.id WHERE v.cpf = '${cpf}';`);
 		return visitorSearch;
 	}
 
 	public async getVisitorByCpF(cpf: string): Promise<VisitorDB | undefined> {
+		const [visitorSearch]: Array<VisitorDB> = await Database.connection
+			.select("*")
+			.from("visitor")
+			.where({ cpf: cpf });
+		return visitorSearch;
+	}
+
+	public async finVisitorBlockedByCPF(cpf: string): Promise<VisitorDB | undefined> {
 		const [visitorSearch]: Array<VisitorDB> = await Database.connection
 			.select("*")
 			.from("visitor")
@@ -122,6 +125,21 @@ export class VisitorDb extends Database {
 			)
 			.from("visitors_block")
 			.join("visitor", "visitor.id", "=", "visitors_block.id_visitor");
+		return block;
+	};
+
+	public getallBlockedVisitorByCPF = async (CPF: string): Promise<Array<BlockedVisitor>> => {
+		const block: Array<BlockedVisitor> = await Database.connection
+			.select(
+				"visitor.id as id_Visitante",
+				"visitors_block.id as ID",
+				"name",
+				"message",
+				"cpf"
+			)
+			.from("visitors_block")
+			.join("visitor", "visitor.id", "=", "visitors_block.id_visitor")
+			.where({cpf: CPF});
 		return block;
 	};
 

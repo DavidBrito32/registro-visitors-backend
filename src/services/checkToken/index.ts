@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { BadRequest } from "../../errors/BadRequest";
 import { CustomError } from "../../errors/CustomError";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const checkToken = async (req: Request, res: Response, next: NextFunction) => {
 	try{
@@ -10,10 +12,7 @@ export const checkToken = async (req: Request, res: Response, next: NextFunction
 		if(!Authorization){			
 			throw new BadRequest("'Unauthorized' Você não tem permissão para acessar esta rota");			
 		}
-		const SECRET = process.env.SECRET;
-		if(!SECRET){
-			throw new BadRequest("'Falha ao decodificar token'");
-		}
+		const SECRET = process.env.SECRET as string;
 		const decoded = jwt.verify(Authorization, SECRET);
 
 		if(!decoded){
